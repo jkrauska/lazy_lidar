@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Lazy LiDAR – Potree Viewer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Potree styles from CDN (version 1.8.x) -->
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.jsdelivr.net/gh/potree/potree@1.8/build/potree/potree.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.jsdelivr.net/gh/potree/potree@1.8/examples/libs/jquery-ui/jquery-ui.min.css"
+    />
+
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        height: 100%;
+        width: 100%;
+      }
+
+      #potree_render_area {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="potree_render_area"></div>
+
+    <!-- Core Potree + deps from CDN (see https://github.com/potree/potree) -->
+    <script src="https://cdn.jsdelivr.net/gh/potree/potree@1.8/examples/libs/jquery/jquery-3.1.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/potree/potree@1.8/examples/libs/three.js/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/potree/potree@1.8/examples/libs/tween/tween.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/potree/potree@1.8/examples/libs/proj4/proj4.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/potree/potree@1.8/examples/libs/plasio/js/laslaz.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/potree/potree@1.8/examples/libs/other/BinaryHeap.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/potree/potree@1.8/examples/libs/other/pako.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/potree/potree@1.8/build/potree/potree.js"></script>
+
+    <script>
+      // Path to a Potree-converted point cloud (folder must contain cloud.js)
+      // Example: potree_viewer/pointclouds/sample/cloud.js
+      const POINTCLOUD_PATH = "pointclouds/sample/cloud.js";
+
+      const viewer = new Potree.Viewer(document.getElementById("potree_render_area"));
+
+      viewer.setEDLEnabled(true);
+      viewer.setFOV(60);
+      viewer.setPointBudget(1_000_000);
+      viewer.setDescription("Lazy LiDAR – Potree viewer");
+      viewer.loadSettingsFromURLParams();
+
+      Potree.loadPointCloud(POINTCLOUD_PATH, "sample", function (e) {
+        const pointcloud = e.pointcloud;
+        viewer.scene.addPointCloud(pointcloud);
+        viewer.fitToScreen();
+      });
+    </script>
+  </body>
+</html>
+
+

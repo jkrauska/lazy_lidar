@@ -11,6 +11,34 @@ import laspy
 from pyproj import Transformer
 
 
+CLASSIFICATION_NAMES = {
+    0: "Created, never classified",
+    1: "Unclassified",
+    2: "Ground",
+    3: "Low Vegetation",
+    4: "Medium Vegetation",
+    5: "High Vegetation",
+    6: "Building",
+    7: "Low Point (Noise)",
+    8: "Model Key-point",
+    9: "Water",
+    10: "Rail",
+    11: "Road Surface",
+    12: "Overlap Points",
+    13: "Wire – Guard",
+    14: "Wire – Conductor",
+    15: "Transmission Tower",
+    16: "Wire – Connector/Insulator",
+    17: "Bridge Deck",
+    18: "High Noise",
+}
+
+
+def classification_label(code: int) -> str:
+    name = CLASSIFICATION_NAMES.get(int(code), "Unknown")
+    return f"{int(code)} ({name})"
+
+
 def display_metadata(laz_file: Path) -> None:
     """
     Load a LAZ file and display its metadata.
@@ -115,7 +143,8 @@ def display_metadata(laz_file: Path) -> None:
             if hasattr(las, 'number_of_returns'):
                 print(f"  Number of Returns: {las.number_of_returns[i]}")
             if hasattr(las, 'classification'):
-                print(f"  Classification: {las.classification[i]}")
+                cls_val = int(las.classification[i])
+                print(f"  Classification: {classification_label(cls_val)}")
             if hasattr(las, 'gps_time'):
                 print(f"  GPS Time: {las.gps_time[i]}")
         
